@@ -39,12 +39,25 @@ Public Next.js dashboard for comparing Swedish DSO private power tariffs, includ
   - `GET /api/peak/dsos?region=SE&hasPrivateTariffs=yes&hasTariffPowerPrices=yes`
   - Confirm JSON structure includes `status` and `data`.
 
+## Troubleshooting data loading
+
+If the dashboard shows "We're unable to fetch tariff data at the moment":
+
+1. Open `http://localhost:3000/api/health`.
+2. Check response:
+   - `ok: true` means server can reach Peak API.
+   - `ok: false` includes diagnostic details (`statusCode`, `upstreamMessage`, or error text).
+3. Ensure `.env.local` contains exactly:
+   - `PEAK_API_KEY=your_real_key`
+4. Restart dev server after changing `.env.local`.
+
 ## Routes
 
 - `/` dashboard with KPI cards, ranking chart, pricing model distribution and DSO cards
 - `/ranking` ranking table
 - `/dso/[slug]` detailed DSO view
 - `/api/peak/*` secure backend proxy to Peak API
+- `/api/health` connectivity diagnostics endpoint
 
 ## Notes
 

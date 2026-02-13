@@ -68,11 +68,17 @@ export default async function Home({ searchParams }: { searchParams: { kw?: stri
         )}
       </main>
     );
-  } catch {
+  } catch (error) {
     return (
       <div className="card" style={{ padding: '1rem' }}>
         <h2>We&apos;re unable to fetch tariff data at the moment.</h2>
         <p>Please verify API connectivity and try again.</p>
+        <p style={{ color: 'var(--muted)' }}>
+          Debug tip: open <code>/api/health</code> to see if your server can reach Peak API with the configured key.
+        </p>
+        <p style={{ color: 'var(--muted)' }}>
+          {error instanceof Error ? error.message : 'Unknown data-loading error'}
+        </p>
         <a href="/"><button>Retry</button></a>
       </div>
     );
