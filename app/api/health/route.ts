@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
+import { getPeakApiKey, hasLikelyValidApiKeyFormat } from '@/lib/env';
 
 const BASE_URL = 'https://api.peakenergy.io';
 
 export async function GET() {
-  const key = process.env.PEAK_API_KEY;
+  const key = getPeakApiKey();
   if (!key) {
-    return NextResponse.json({ ok: false, message: 'PEAK_API_KEY is missing on server runtime.' }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, message: 'PEAK_API_KEY/PEAKENERGY_API_KEY is missing on server runtime.' },
+      { status: 500 }
+    );
   }
 
   try {
@@ -21,7 +25,15 @@ export async function GET() {
           ok: false,
           message: 'Peak API connectivity failed.',
           statusCode: response.status,
-          upstreamMessage: payload?.message ?? null
+          upstreamMessage: payload?.message ?? null,
+          diagnostics: {
+            keyLength: key.length,
+            keyLooksValidLength: hasLikelyValidApiKeyFormat(key),
+            hint:
+              response.status === 401
+                ? '401 Unauthorized usually means the API key is invalid/expired, has surrounding quotes, or belongs to a different environment.'
+                : null
+          }
         },
         { status: response.status }
       );
@@ -30,7 +42,11 @@ export async function GET() {
     return NextResponse.json({
       ok: true,
       message: 'Server can access Peak API with current key.',
-      sampleStatus: payload?.status ?? null
+      sampleStatus: payload?.status ?? null,
+      diagnostics: {
+        keyLength: key.length,
+        keyLooksValidLength: hasLikelyValidApiKeyFormat(key)
+      }
     });
   } catch (error) {
     return NextResponse.json(

@@ -1,4 +1,5 @@
 import { Dso, Tariff } from './types';
+import { getPeakApiKey } from './env';
 
 const BASE_URL = 'https://api.peakenergy.io';
 
@@ -36,9 +37,9 @@ function nextPageValue(pagination: PeakResponse['pagination']) {
 }
 
 async function peakFetch(path: string): Promise<PeakResponse> {
-  const key = process.env.PEAK_API_KEY;
+  const key = getPeakApiKey();
   if (!key) {
-    throw new Error('Missing PEAK_API_KEY environment variable. Add it to .env.local and restart the dev server.');
+    throw new Error('Missing PEAK_API_KEY (or PEAKENERGY_API_KEY) environment variable. Add it to .env.local and restart the dev server.');
   }
 
   const response = await fetch(`${BASE_URL}${path}`, {

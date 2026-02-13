@@ -16,6 +16,7 @@ Public Next.js dashboard for comparing Swedish DSO private power tariffs, includ
    ```
    PEAK_API_KEY=...
    ```
+   (Alternative env var also supported: `PEAKENERGY_API_KEY`)
 4. Run:
    ```bash
    npm run dev
@@ -47,9 +48,11 @@ If the dashboard shows "We're unable to fetch tariff data at the moment":
 2. Check response:
    - `ok: true` means server can reach Peak API.
    - `ok: false` includes diagnostic details (`statusCode`, `upstreamMessage`, or error text).
-3. Ensure `.env.local` contains exactly:
+3. Ensure `.env.local` contains exactly one of:
    - `PEAK_API_KEY=your_real_key`
-4. Restart dev server after changing `.env.local`.
+   - `PEAKENERGY_API_KEY=your_real_key`
+4. Do not wrap the key in quotes unless required by your environment.
+5. Restart dev server after changing `.env.local`.
 
 ## Routes
 
